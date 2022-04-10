@@ -20,6 +20,8 @@
         <item>Path</item>
         <item>Pose</item>
         <item>TouchGoal</item>
+        <item>Marker</item>
+
     </string-array>
 
 
@@ -48,6 +50,10 @@
         Displays a pose from a geometry_msgs::PoseStamped message.
     </string>
 
+    <!-- Marker -->
+    <string name="Marker_description">
+        Displays a marker from a visualization_msgs::Marker message.
+    </string>
 
     <!-- TouchGoal -->
     <string name="TouchGoal_description">

@@ -46,7 +46,7 @@ public class PathView extends SubscriberLayerView {
         super.setWidgetEntity(widgetEntity);
 
         PathEntity entity = (PathEntity)widgetEntity;
-        lineColor = ROSColor.fromHex(entity.lineColor);
+        lineColor = ROSColor.fromInt(entity.lineColor);
         lineWidth = entity.lineWidth;
     }
 

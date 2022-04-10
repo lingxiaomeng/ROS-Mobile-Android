@@ -1,4 +1,4 @@
-package com.schneewittchen.rosandroid.widgets.path;
+package com.schneewittchen.rosandroid.widgets.marker;
 
 import com.schneewittchen.rosandroid.model.entities.widgets.SubscriberLayerEntity;
 import com.schneewittchen.rosandroid.model.repositories.rosRepo.message.Topic;
@@ -13,15 +13,10 @@ import com.schneewittchen.rosandroid.model.repositories.rosRepo.message.Topic;
  * @version 1.0.0
  * @created on 08.03.21
  */
-public class PathEntity extends SubscriberLayerEntity {
-
-    public float lineWidth;
-    public int lineColor;
+public class MarkerEntity extends SubscriberLayerEntity {
 
 
-    public PathEntity() {
-        this.topic = new Topic("/move_base/TebLocalPlannerROS/local_plan", nav_msgs.Path._TYPE);
-        this.lineWidth = 4;
-        this.lineColor = -16776961;
+    public MarkerEntity() {
+        this.topic = new Topic("/start_marker", visualization_msgs.Marker._TYPE);
     }
 }

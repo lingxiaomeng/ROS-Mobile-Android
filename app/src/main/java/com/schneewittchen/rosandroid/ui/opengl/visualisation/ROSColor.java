@@ -20,6 +20,8 @@ import com.google.common.base.Preconditions;
 
 import javax.microedition.khronos.opengles.GL10;
 
+import std_msgs.ColorRGBA;
+
 /**
  * Defines a color based on RGBA values in the range [0, 1].
  *
@@ -40,6 +42,12 @@ public class ROSColor {
         this.alpha = alpha;
     }
 
+    public ROSColor(ColorRGBA color) {
+        this.red = color.getR();
+        this.green = color.getG();
+        this.blue = color.getB();
+        this.alpha = color.getA();
+    }
 
     public ROSColor interpolate(ROSColor other, float fraction) {
         return new ROSColor(
@@ -118,6 +126,8 @@ public class ROSColor {
 
         return new ROSColor(r, g, b, a);
     }
+
+
 
     public static ROSColor fromHex(String hex) {
         int length = hex.length();

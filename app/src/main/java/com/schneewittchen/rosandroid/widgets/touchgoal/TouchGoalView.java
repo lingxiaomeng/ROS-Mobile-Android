@@ -1,6 +1,7 @@
 package com.schneewittchen.rosandroid.widgets.touchgoal;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 
@@ -83,6 +84,7 @@ public class TouchGoalView extends PublisherLayerView {
     public void draw(VisualizationView view, GL10 gl) {
         if (state != State.DOUBLETAPPED)
             return;
+        Log.i(TAG, data.start+"");
 
         gl.glPushMatrix();
         gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);

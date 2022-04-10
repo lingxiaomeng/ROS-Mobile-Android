@@ -2,7 +2,6 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 30
-    buildToolsVersion "29.0.3"
 
     defaultConfig {
         applicationId "com.schneewittchen.rosandroid"
@@ -55,6 +54,7 @@ dependencies {
     implementation 'org.ros.rosjava_messages:map_msgs:1.13.0'
     implementation 'org.ros.rosjava_messages:sensor_msgs:1.12.7'
     implementation 'org.ros.rosjava_messages:tf2_msgs:0.5.20'
+    implementation 'org.ros.rosjava_messages:visualization_msgs:1.12.7'
     implementation 'org.ros.rosjava_bootstrap:message_generation:0.3.3'
     implementation 'org.ros.android_core:android_core_components:0.4.0'
 

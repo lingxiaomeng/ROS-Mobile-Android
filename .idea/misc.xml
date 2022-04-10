@@ -1,5 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/workspace/ROS-Mobile-Android/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.193" />
+        <entry key="..\:/workspace/ROS-Mobile-Android/app/src/main/res/drawable/ic_expand_less_white_24dp.xml" value="0.193" />
+        <entry key="..\:/workspace/ROS-Mobile-Android/app/src/main/res/layout/detail_layer.xml" value="0.18489583333333334" />
+        <entry key="..\:/workspace/ROS-Mobile-Android/app/src/main/res/layout/fragment_configurations.xml" value="0.18489583333333334" />
+        <entry key="..\:/workspace/ROS-Mobile-Android/app/src/main/res/layout/fragment_detail_main.xml" value="0.18489583333333334" />
+        <entry key="..\:/workspace/ROS-Mobile-Android/app/src/main/res/layout/fragment_viz.xml" value="0.18489583333333334" />
+        <entry key="..\:/workspace/ROS-Mobile-Android/app/src/main/res/layout/widget_detail_laserscan.xml" value="0.33" />
+        <entry key="..\:/workspace/ROS-Mobile-Android/app/src/main/res/layout/widget_detail_marker.xml" value="0.23645833333333333" />
+        <entry key="..\:/workspace/ROS-Mobile-Android/app/src/main/res/layout/widget_detail_path.xml" value="0.25" />
+        <entry key="..\:/workspace/ROS-Mobile-Android/app/src/main/res/layout/widget_detail_pose.xml" value="0.23645833333333333" />
+      </map>
+    </option>
+  </component>
+  <component name="ExternalStorageConfigurationManager" enabled="true" />
   <component name="JavadocGenerationManager">
     <option name="OUTPUT_DIRECTORY" value="$PROJECT_DIR$/doc" />
     <option name="OPTION_DOCUMENT_TAG_AUTHOR" value="true" />
@@ -48,7 +65,7 @@
       </value>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="11" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">
