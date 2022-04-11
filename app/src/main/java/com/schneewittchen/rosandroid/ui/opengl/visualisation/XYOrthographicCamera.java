@@ -175,6 +175,13 @@ public class XYOrthographicCamera {
     }
 
     /**
+     * @return the current camera scale
+     */
+    public float getScale() {
+        return (float)cameraToRosTransform.getScale();
+    }
+
+    /**
      * @return the provided pixel coordinates (where the origin is the top left
      * corner of the view) in the camera {@link #frame}
      */

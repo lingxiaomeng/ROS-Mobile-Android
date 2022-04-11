@@ -21,6 +21,7 @@
         <item>Pose</item>
         <item>TouchGoal</item>
         <item>Marker</item>
+        <item>RobotModel</item>
 
     </string-array>
 
@@ -53,6 +54,11 @@
     <!-- Marker -->
     <string name="Marker_description">
         Displays a marker from a visualization_msgs::Marker message.
+    </string>
+
+    <!-- RobotModel -->
+    <string name="RobotModel_description">
+        Displays a robotmodel from a tf2_msgs::TFMessage message.
     </string>
 
     <!-- TouchGoal -->

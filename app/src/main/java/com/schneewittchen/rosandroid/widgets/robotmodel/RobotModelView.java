@@ -1,4 +1,4 @@
-package com.schneewittchen.rosandroid.widgets.marker;
+package com.schneewittchen.rosandroid.widgets.robotmodel;
 
 import android.content.Context;
 
@@ -20,7 +20,7 @@ import java.nio.FloatBuffer;
 
 import javax.microedition.khronos.opengles.GL10;
 
-import visualization_msgs.Marker;
+import tf2_msgs.TFMessage;
 
 
 /**
@@ -30,14 +30,14 @@ import visualization_msgs.Marker;
  * @version 1.0.0
  * @created on 08.03.21
  */
-public class MarkerView extends SubscriberLayerView {
+public class RobotModelView extends SubscriberLayerView {
 
-    public static final String TAG = MarkerView.class.getSimpleName();
+    public static final String TAG = RobotModelView.class.getSimpleName();
 
     private Shape shape;
-    private Marker marker;
+    private TFMessage tf;
 
-    public MarkerView(Context context) {
+    public RobotModelView(Context context) {
         super(context);
         shape = new GoalShape();
     }
@@ -49,36 +49,36 @@ public class MarkerView extends SubscriberLayerView {
 
     @Override
     public void draw(VisualizationView view, GL10 gl) {
-        if (marker == null) return;
-        double x = marker.getPose().getPosition().getX();
-        double y = marker.getPose().getPosition().getY();
-        double z = marker.getPose().getPosition().getZ();
+//        if (marker == null) return;
+//        double x = marker.getPose().getPosition().getX();
+//        double y = marker.getPose().getPosition().getY();
+//        double z = marker.getPose().getPosition().getZ();
 //        Log.i(TAG, x + " " + y + " " + z);
-        ROSColor pointcolor = new ROSColor(marker.getColor());
+        ROSColor pointcolor = new ROSColor(0.5f,0.5f,0.5f,1f);
 
         FloatBuffer pointVertices = Vertices.allocateBuffer(3 );
 
-        pointVertices.put((float) x);
-        pointVertices.put((float) y);
-        pointVertices.put((float) z);
+        pointVertices.put(0.0f);
+        pointVertices.put(0.0f);
+        pointVertices.put(0.0f);
 
         pointVertices.position(0);
 //        gl.glScalef((float)view.getCamera().getZoom()/100, (float)view.getCamera().getZoom()/100, 1.0f);
         Vertices.drawPoints(gl, pointVertices, pointcolor, 20*view.getCamera().getScale());
-        shape.draw(view, gl);
+//        shape.draw(view, gl);
     }
 
     @Override
     public void onNewMessage(Message message) {
-        marker = (Marker) message;
-        GraphName source = GraphName.of(marker.getHeader().getFrameId());
+        tf = (TFMessage) message;
+        GraphName source = GraphName.of("base_link");
         frame = source;
         FrameTransform frameTransform = TransformProvider.getInstance().getTree().transform(source, frame);
 
         if (frameTransform == null) return;
 
-        Transform poseTransform = Transform.fromPoseMessage(marker.getPose());
-        shape.setTransform(frameTransform.getTransform().multiply(poseTransform));
+//        Transform poseTransform = Transform.fromPoseMessage(marker.getPose());
+//        shape.setTransform(frameTransform.getTransform().multiply(poseTransform));
     }
 
 }

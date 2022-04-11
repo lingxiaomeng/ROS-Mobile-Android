@@ -109,11 +109,11 @@ public class CameraControl {
         if (translateGestureDetector != null)
             handled = handled || translateGestureDetector.onTouchEvent(event);
 
-        if (rotateGestureDetector != null)
-            handled = handled || rotateGestureDetector.onTouchEvent(event);
-
         if (zoomGestureDetector != null)
             handled = handled || zoomGestureDetector.onTouchEvent(event);
+
+        if (rotateGestureDetector != null)
+            handled = handled || rotateGestureDetector.onTouchEvent(event);
 
         return handled;
     }
