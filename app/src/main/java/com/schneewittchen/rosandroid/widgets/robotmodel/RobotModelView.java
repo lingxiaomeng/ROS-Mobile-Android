@@ -64,7 +64,7 @@ public class RobotModelView extends SubscriberLayerView {
 
         pointVertices.position(0);
 //        gl.glScalef((float)view.getCamera().getZoom()/100, (float)view.getCamera().getZoom()/100, 1.0f);
-        Vertices.drawPoints(gl, pointVertices, pointcolor, 20*view.getCamera().getScale());
+        Vertices.drawPoints(gl, pointVertices, pointcolor, 25*view.getCamera().getScale());
 //        shape.draw(view, gl);
     }
 
