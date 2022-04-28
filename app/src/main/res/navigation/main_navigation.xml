@@ -49,6 +49,17 @@
         app:popUpTo="@id/main_navigation"
         app:popUpToInclusive="true" />
 
+    <fragment
+        android:id="@+id/customFragment"
+        android:name="com.schneewittchen.rosandroid.ui.fragments.custom.customFragment"
+        android:label="CustomFragment"
+        tools:layout="@layout/fragment_custom" />
+
+    <action
+        android:id="@+id/action_to_customFragment"
+        app:destination="@id/masterFragment"
+        app:popUpTo="@id/main_navigation"
+        app:popUpToInclusive="true" />
 
     <fragment
         android:id="@+id/vizFragment"
@@ -59,7 +70,7 @@
     <action
         android:id="@+id/action_to_vizFragment"
         app:destination="@id/vizFragment"
-        app:popUpTo="@id/main_navigation"
+        app:popUpTo="@id/customFragment"
         app:popUpToInclusive="true" />
 
     <fragment

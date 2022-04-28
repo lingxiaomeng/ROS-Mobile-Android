@@ -105,6 +105,8 @@ public class ConfigRepositoryImpl implements ConfigRepository {
             SSHEntity sshEntity = new SSHEntity();
             sshEntity.configId = configId;
             mDataStorage.addSSH(sshEntity);
+
+
         }).execute();
     }
 

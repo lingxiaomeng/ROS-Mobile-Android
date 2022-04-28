@@ -5,9 +5,14 @@
       <map>
         <entry key="..\:/workspace/ROS-Mobile-Android/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.193" />
         <entry key="..\:/workspace/ROS-Mobile-Android/app/src/main/res/drawable/ic_expand_less_white_24dp.xml" value="0.193" />
+        <entry key="..\:/workspace/ROS-Mobile-Android/app/src/main/res/layout/activity_main.xml" value="0.18489583333333334" />
+        <entry key="..\:/workspace/ROS-Mobile-Android/app/src/main/res/layout/detail_group_widget.xml" value="0.18489583333333334" />
         <entry key="..\:/workspace/ROS-Mobile-Android/app/src/main/res/layout/detail_layer.xml" value="0.18489583333333334" />
+        <entry key="..\:/workspace/ROS-Mobile-Android/app/src/main/res/layout/detail_widget.xml" value="0.18489583333333334" />
         <entry key="..\:/workspace/ROS-Mobile-Android/app/src/main/res/layout/fragment_configurations.xml" value="0.18489583333333334" />
+        <entry key="..\:/workspace/ROS-Mobile-Android/app/src/main/res/layout/fragment_custom.xml" value="0.18489583333333334" />
         <entry key="..\:/workspace/ROS-Mobile-Android/app/src/main/res/layout/fragment_detail_main.xml" value="0.18489583333333334" />
+        <entry key="..\:/workspace/ROS-Mobile-Android/app/src/main/res/layout/fragment_intro.xml" value="0.18489583333333334" />
         <entry key="..\:/workspace/ROS-Mobile-Android/app/src/main/res/layout/fragment_viz.xml" value="0.18489583333333334" />
         <entry key="..\:/workspace/ROS-Mobile-Android/app/src/main/res/layout/widget_detail_laserscan.xml" value="0.33" />
         <entry key="..\:/workspace/ROS-Mobile-Android/app/src/main/res/layout/widget_detail_marker.xml" value="0.23645833333333333" />
