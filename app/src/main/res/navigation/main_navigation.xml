@@ -57,7 +57,7 @@
 
     <action
         android:id="@+id/action_to_customFragment"
-        app:destination="@id/masterFragment"
+        app:destination="@id/customFragment"
         app:popUpTo="@id/main_navigation"
         app:popUpToInclusive="true" />
 

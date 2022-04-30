@@ -16,6 +16,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.schneewittchen.rosandroid.R;
+import com.schneewittchen.rosandroid.widgets.location.LocationModel;
 import com.schneewittchen.rosandroid.viewmodel.VizViewModel;
 import com.schneewittchen.rosandroid.ui.general.DataListener;
 import com.schneewittchen.rosandroid.ui.general.WidgetChangeListener;
@@ -37,6 +38,8 @@ public class VizFragment extends Fragment implements DataListener, WidgetChangeL
     public static final String TAG = VizFragment.class.getSimpleName();
 
     private VizViewModel mViewModel;
+    private LocationModel locationModel;
+
     private WidgetViewGroup widgetViewGroupview;
     private DrawerLayout drawerLayout;
     private ImageButton optionsOpenButton;
@@ -76,6 +79,7 @@ public class VizFragment extends Fragment implements DataListener, WidgetChangeL
         super.onActivityCreated(savedInstanceState);
 
         mViewModel = new ViewModelProvider(this).get(VizViewModel.class);
+        locationModel = LocationModel.getInstance(getContext());
 
         mViewModel.getCurrentWidgets().observe(getViewLifecycleOwner(), widgetEntities -> {
             widgetViewGroupview.setWidgets(widgetEntities);

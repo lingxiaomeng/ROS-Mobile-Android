@@ -51,7 +51,7 @@ import java.util.List;
 public class WidgetViewGroup extends ViewGroup {
 
     public static final String TAG = WidgetViewGroup.class.getSimpleName();
-    public static final int TILES_X = 8;
+    public static final int TILES_X = 16;
 
     Paint crossPaint;
     Paint scaleShadowPaint;

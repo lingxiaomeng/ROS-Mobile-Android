@@ -10,7 +10,9 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
+import com.amap.api.maps.MapsInitializer;
 import com.schneewittchen.rosandroid.R;
+import com.schneewittchen.rosandroid.ui.fragments.custom.customFragment;
 import com.schneewittchen.rosandroid.ui.fragments.intro.IntroFragment;
 import com.schneewittchen.rosandroid.ui.fragments.main.MainFragment;
 import com.schneewittchen.rosandroid.ui.fragments.main.OnBackPressedListener;
@@ -38,6 +40,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
+        MapsInitializer.updatePrivacyShow(MainActivity.this,true,true);
+        MapsInitializer.updatePrivacyAgree(MainActivity.this,true);
 
         try {
             if (savedInstanceState == null && requiresIntro()) {

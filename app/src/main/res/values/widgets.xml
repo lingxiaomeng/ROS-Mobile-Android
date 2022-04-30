@@ -12,6 +12,7 @@
         <item>Logger</item>
         <item>RqtPlot</item>
         <item>Viz2D</item>
+        <item>Location</item>
     </string-array>
 
     <string-array name="layer_names">
@@ -73,7 +74,10 @@
     <string name="Battery_description">
         The battery indicator displays charging activity and charge percentage.
     </string>
-
+    <!-- Battery -->
+    <string name="Location_description">
+        Return AMap location.
+    </string>
     <!-- Button -->
     <string name="Button_description">
         A Button Node which, when pressed, publishes on a topic chosen

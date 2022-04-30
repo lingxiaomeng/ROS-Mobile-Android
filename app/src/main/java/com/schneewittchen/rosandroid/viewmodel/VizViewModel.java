@@ -1,12 +1,16 @@
 package com.schneewittchen.rosandroid.viewmodel;
 
 import android.app.Application;
+import android.content.Context;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
+import com.amap.api.location.AMapLocationClient;
+import com.amap.api.location.AMapLocationClientOption;
+import com.amap.api.location.AMapLocationListener;
 import com.schneewittchen.rosandroid.domain.RosDomain;
 import com.schneewittchen.rosandroid.model.repositories.rosRepo.message.RosData;
 import com.schneewittchen.rosandroid.model.repositories.rosRepo.node.BaseData;
@@ -31,9 +35,9 @@ public class VizViewModel extends AndroidViewModel {
     private final RosDomain rosDomain;
 
 
+
     public VizViewModel(@NonNull Application application) {
         super(application);
-
         rosDomain = RosDomain.getInstance(application);
     }
 
@@ -53,4 +57,5 @@ public class VizViewModel extends AndroidViewModel {
     public void publishData(BaseData data) {
         rosDomain.publishData(data);
     }
+
 }

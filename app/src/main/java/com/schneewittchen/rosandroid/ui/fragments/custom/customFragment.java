@@ -1,31 +1,38 @@
 package com.schneewittchen.rosandroid.ui.fragments.custom;
 
+import android.graphics.Color;
 import android.os.Bundle;
-import android.text.Editable;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
-import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
-import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-import com.google.android.material.textfield.TextInputLayout;
+import com.amap.api.maps.AMap;
+import com.amap.api.maps.AMapException;
+import com.amap.api.maps.CameraUpdateFactory;
+import com.amap.api.maps.TextureMapView;
+import com.amap.api.maps.UiSettings;
+import com.amap.api.maps.model.BitmapDescriptorFactory;
+import com.amap.api.maps.model.LatLng;
+import com.amap.api.maps.model.Marker;
+import com.amap.api.maps.model.MarkerOptions;
+import com.amap.api.maps.model.Polyline;
+import com.amap.api.maps.model.PolylineOptions;
+import com.amap.api.navi.AMapNavi;
+import com.amap.api.navi.model.AMapCalcRouteResult;
+import com.amap.api.navi.model.AMapNaviPath;
+import com.amap.api.navi.model.NaviLatLng;
 import com.schneewittchen.rosandroid.R;
-import com.schneewittchen.rosandroid.databinding.FragmentMasterBinding;
-import com.schneewittchen.rosandroid.model.repositories.rosRepo.connection.ConnectionType;
-import com.schneewittchen.rosandroid.utility.Utils;
-import com.schneewittchen.rosandroid.viewmodel.MasterViewModel;
+import com.schneewittchen.rosandroid.databinding.FragmentCustomBinding;
+import com.schneewittchen.rosandroid.viewmodel.CustomViewModel;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 
 /**
@@ -41,18 +48,19 @@ import java.util.ArrayList;
  * @updated on 13.05.2021
  * @modified by Nico Studt
  */
-public class customFragment extends Fragment implements TextView.OnEditorActionListener {
+public class customFragment extends naviFragment implements AMap.OnMapClickListener, View.OnClickListener {
 
     private static final String TAG = customFragment.class.getSimpleName();
-    private static final long MIN_HELP_TIMESPAM = 10 * 1000;
 
-    private MasterViewModel mViewModel;
-    private FragmentMasterBinding binding;
-
-    private ArrayList<String> ipItemList;
-    protected AutoCompleteTextView ipAddressField;
-    protected TextInputLayout ipAddressLayout;
-    private ArrayAdapter<String> ipArrayAdapter;
+    private CustomViewModel mViewModel;
+    private FragmentCustomBinding binding;
+    private TextureMapView mAMapNaviView;
+    private AMap aMap;
+    private UiSettings mUiSettings;
+    private AMapNavi mAMapNavi;
+    private Polyline polyline;
+    private int evenType = -1;
+    private Toast toast;
 
     public static customFragment newInstance() {
         Log.i(TAG, "New Master Fragment");
@@ -64,15 +72,19 @@ public class customFragment extends Fragment implements TextView.OnEditorActionL
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        binding = FragmentMasterBinding.inflate(inflater, container, false);
-
+        binding = FragmentCustomBinding.inflate(inflater, container, false);
         return binding.getRoot();
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        updateMasterDetails();
+        mAMapNaviView.onDestroy();
         binding = null;
     }
 
@@ -80,147 +92,128 @@ public class customFragment extends Fragment implements TextView.OnEditorActionL
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        mViewModel = new ViewModelProvider(requireActivity()).get(MasterViewModel.class);
+        mViewModel = new ViewModelProvider(requireActivity()).get(CustomViewModel.class);
+        mAMapNaviView = (TextureMapView) getView().findViewById(R.id.map);
 
-        // Define Views --------------------------------------------------------------
-        ipAddressField = getView().findViewById(R.id.ipAddessTextView);
-        ipAddressLayout = getView().findViewById(R.id.ipAddessLayout);
-
-        ipItemList = new ArrayList<>();
-        ipArrayAdapter = new ArrayAdapter<>(this.getContext(),
-                R.layout.dropdown_menu_popup_item, ipItemList);
-        ipAddressField.setAdapter(ipArrayAdapter);
-
-        String firstDeviceIp = mViewModel.getIPAddress();
-        if (firstDeviceIp != null) {
-            ipAddressField.setText(firstDeviceIp, false);
-        }
-
-        ipAddressField.setOnClickListener(clickedView -> {
-            updateIpSpinner();
-            ipAddressField.showDropDown();
-        });
-
-        ipAddressLayout.setEndIconOnClickListener(v -> {
-            ipAddressField.requestFocus();
-            ipAddressField.callOnClick();
-        });
-
-        ipAddressField.setOnItemClickListener((parent, view, position, id) -> {
-            ipAddressField.clearFocus();
-        });
-
-        // View model connection -------------------------------------------------------------------
-
-        mViewModel.getMaster().observe(getViewLifecycleOwner(), master -> {
-            if (master == null) {
-                binding.masterIpEditText.getText().clear();
-                binding.masterPortEditText.getText().clear();
-                return;
+        if (mAMapNaviView != null) {
+            mAMapNaviView.onCreate(savedInstanceState);
+            aMap = mAMapNaviView.getMap();
+            mUiSettings = aMap.getUiSettings();
+            mUiSettings.setMyLocationButtonEnabled(true);
+            aMap.setMyLocationEnabled(true);// 可触发定位并显示当前位置
+            aMap.moveCamera(CameraUpdateFactory.zoomTo(18));
+            aMap.setOnMapClickListener(this);
+            try {
+                mAMapNavi = AMapNavi.getInstance(getContext());
+                mAMapNavi.addAMapNaviListener(this);
+                mAMapNavi.addParallelRoadListener(this);
+//                mAMapNaviView.add
+            } catch (AMapException e) {
+                e.printStackTrace();
             }
-
-            binding.masterIpEditText.setText(master.ip);
-            binding.masterPortEditText.setText(String.valueOf(master.port));
-        });
-
-        mViewModel.getCurrentNetworkSSID().observe(getViewLifecycleOwner(),
-                networkSSID -> binding.NetworkSSIDText.setText(networkSSID));
-
-        mViewModel.getRosConnection().observe(getViewLifecycleOwner(), this::setRosConnection);
-
-        // User input ------------------------------------------------------------------------------
-
-        binding.connectButton.setOnClickListener(v -> {
-                updateMasterDetails();
-                mViewModel.setMasterDeviceIp(ipAddressField.getText().toString());
-                mViewModel.connectToMaster();
-        });
-        binding.disconnectButton.setOnClickListener(v -> mViewModel.disconnectFromMaster());
-        binding.helpButton.setOnClickListener(v -> showConnectionHelpDialog());
-        binding.masterIpEditText.setOnEditorActionListener(this);
-        binding.masterPortEditText.setOnEditorActionListener(this);
-    }
-
-    private void updateIpSpinner() {
-        ipItemList = new ArrayList<>();
-        ipItemList = mViewModel.getIPAddressList();
-        ipArrayAdapter.clear();
-        ipArrayAdapter.addAll(ipItemList);
-    }
-
-    private void showConnectionHelpDialog() {
-        mViewModel.updateHelpDisplay();
-        String[] items = getResources().getStringArray(R.array.connection_checklist);
-
-        new MaterialAlertDialogBuilder(this.requireContext())
-                .setTitle(R.string.connection_checklist_title)
-                .setItems(items, null)
-                .show();
-    }
-
-    private void setRosConnection(ConnectionType connectionType) {
-        int connectVisibility = View.INVISIBLE;
-        int disconnectVisibility = View.INVISIBLE;
-        int pendingVisibility = View.INVISIBLE;
-        String statustext = getContext().getString(R.string.connected);
-
-        if (connectionType == ConnectionType.DISCONNECTED
-                || connectionType == ConnectionType.FAILED) {
-            connectVisibility = View.VISIBLE;
-            statustext = getContext().getString(R.string.disconnected);
-
-        } else if (connectionType == ConnectionType.CONNECTED) {
-            disconnectVisibility = View.VISIBLE;
-
-        } else if (connectionType == ConnectionType.PENDING) {
-            pendingVisibility = View.VISIBLE;
-            statustext = getContext().getString(R.string.pending);
         }
 
-        // Display connection help dialog if the connection failed and enough time has passed
-        // since the last display.
-        if (connectionType == ConnectionType.FAILED && mViewModel.shouldShowHelp()) {
-            showConnectionHelpDialog();
-        }
-
-        binding.statusText.setText(statustext);
-        binding.connectedImage.setVisibility(disconnectVisibility);
-        binding.disconnectedImage.setVisibility(connectVisibility);
-        binding.connectButton.setVisibility(connectVisibility);
-        binding.disconnectButton.setVisibility(disconnectVisibility);
-        binding.pendingBar.setVisibility(pendingVisibility);
-    }
-
-    private void updateMasterDetails() {
-        // Update master IP
-        Editable masterIp = binding.masterIpEditText.getText();
-
-        if (masterIp != null) {
-            mViewModel.setMasterIp(masterIp.toString());
-        }
-
-        // Update master port
-        Editable masterPort = binding.masterPortEditText.getText();
-
-        if (masterPort != null && masterPort.length() > 0) {
-            mViewModel.setMasterPort(masterPort.toString());
-        }
+        binding.buttonSelectEnd.setOnClickListener(this);
+        binding.buttonStart.setOnClickListener(this);
     }
 
     @Override
-    public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
-        switch (actionId) {
-            case EditorInfo.IME_ACTION_DONE:
-            case EditorInfo.IME_ACTION_NEXT:
-            case EditorInfo.IME_ACTION_PREVIOUS:
-                updateMasterDetails();
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        mAMapNaviView.onSaveInstanceState(outState);
+    }
 
-                view.clearFocus();
-                Utils.hideSoftKeyboard(view);
+    @Override
+    public void onCalculateRouteSuccess(AMapCalcRouteResult aMapCalcRouteResult) {
+        super.onCalculateRouteSuccess(aMapCalcRouteResult);
+        if (polyline != null)
+            polyline.remove();
 
-                return true;
+        HashMap<Integer, AMapNaviPath> navipaths = mAMapNavi.getNaviPaths();
+        ArrayList<LatLng> latLngs = new ArrayList<>();
+
+        ArrayList<MarkerOptions> markerOptionsArrayList = new ArrayList<>();
+        for (AMapNaviPath path : navipaths.values()) {
+            Log.i("MLX", path.getCoordList().size() + "");
+            Log.i("MLX", path.getCoordList().toString());
+            for (NaviLatLng p : path.getCoordList()) {
+                LatLng latLng = new LatLng(p.getLatitude(), p.getLongitude());
+                latLngs.add(latLng);
+                markerOptionsArrayList.add(new MarkerOptions().position(latLng));
+            }
+        }
+        polyline = aMap.addPolyline(new PolylineOptions().
+                addAll(latLngs).width(10).color(Color.argb(255, 0, 0, 255)));
+
+    }
+
+    @Override
+    public void onInitNaviSuccess() {
+        Log.i(TAG, "init navi");
+        super.onInitNaviSuccess();
+    }
+
+    @Override
+    public void onInitNaviFailure() {
+        Log.e(TAG, "init navi");
+        super.onInitNaviFailure();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mAMapNaviView.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mAMapNaviView.onPause();
+    }
+
+    Marker endMarker = null;
+
+    @Override
+    public void onMapClick(LatLng latLng) {
+        Log.i("MLX", "终点");
+        if (toast != null) {
+            toast.cancel();
+            toast = null;
+        }
+        if (evenType == 1) {
+            if (endMarker != null) {
+                endMarker.remove();
+            }
+            MarkerOptions markerOptions = new MarkerOptions().icon(BitmapDescriptorFactory
+                    .defaultMarker(BitmapDescriptorFactory.HUE_RED))
+                    .position(latLng)
+                    .draggable(true).title("终点");
+            endMarker = aMap.addMarker(markerOptions);
+            endMarker.setObject(this);
+        }
+        evenType = -1;
+    }
+
+    public void pick(int evenType) {
+        this.evenType = evenType;
+        toast = Toast.makeText(getContext(), "请在地图上选取坐标", Toast.LENGTH_SHORT);
+        toast.show();
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.button_select_end:
+                pick(1);
+                break;
+            case R.id.button_start:
+                Toast.makeText(getContext(), "开始导航", Toast.LENGTH_SHORT).show();
+                if (endMarker != null) {
+                    mAMapNavi.calculateRideRoute(new NaviLatLng(endMarker.getPosition().latitude, endMarker.getPosition().longitude), new NaviLatLng(22.6005, 113.995263));
+                }
+                break;
+
         }
 
-        return false;
     }
 }
