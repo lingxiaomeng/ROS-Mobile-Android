@@ -2,6 +2,8 @@ package com.schneewittchen.rosandroid.widgets.location;
 
 import com.schneewittchen.rosandroid.model.entities.widgets.BaseEntity;
 import com.schneewittchen.rosandroid.model.repositories.rosRepo.node.BaseData;
+import com.schneewittchen.rosandroid.widgets.joystick.JoystickData;
+import com.schneewittchen.rosandroid.widgets.joystick.JoystickEntity;
 
 import org.ros.internal.message.Message;
 import org.ros.node.topic.Publisher;
@@ -21,17 +23,20 @@ import sensor_msgs.NavSatFix;
 
 public class LocationData extends BaseData {
 
-    private NavSatFix navSatFix;
+    public static final String TAG = JoystickData.class.getSimpleName();
+    public double latitude;
+    public double longitude;
 
-    public LocationData(NavSatFix navSatFix) {
-        this.navSatFix = navSatFix;
+    public LocationData(double latitude, double longitude) {
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
 
-    public double getLat() {
-        return navSatFix.getLatitude();
-    }
-
-    public double getLon() {
-        return navSatFix.getLongitude();
+    @Override
+    public Message toRosMessage(Publisher<Message> publisher, BaseEntity widget) {
+        NavSatFix message = (NavSatFix) publisher.newMessage();
+        message.setLatitude(latitude);
+        message.setLongitude(longitude);
+        return message;
     }
 }

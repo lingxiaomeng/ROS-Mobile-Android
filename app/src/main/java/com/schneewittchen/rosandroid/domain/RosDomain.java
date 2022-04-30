@@ -1,6 +1,7 @@
 package com.schneewittchen.rosandroid.domain;
 
 import android.app.Application;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
@@ -13,6 +14,7 @@ import com.schneewittchen.rosandroid.model.repositories.rosRepo.RosRepository;
 import com.schneewittchen.rosandroid.model.repositories.rosRepo.connection.ConnectionType;
 import com.schneewittchen.rosandroid.model.repositories.rosRepo.message.RosData;
 import com.schneewittchen.rosandroid.model.repositories.rosRepo.message.Topic;
+import com.schneewittchen.rosandroid.model.repositories.rosRepo.node.AbstractNode;
 import com.schneewittchen.rosandroid.utility.LambdaTask;
 import com.schneewittchen.rosandroid.model.repositories.rosRepo.node.BaseData;
 import com.schneewittchen.rosandroid.model.entities.widgets.BaseEntity;
@@ -80,6 +82,7 @@ public class RosDomain {
 
     public void publishData(BaseData data) {
         rosRepo.publishData(data);
+        Log.i("MLX",TAG+","+data.getTopic().type);
     }
 
     public void createWidget(Long parentId, String widgetType) {
@@ -131,4 +134,5 @@ public class RosDomain {
     }
 
     public List<Topic> getTopicList() { return rosRepo.getTopicList(); }
+
 }

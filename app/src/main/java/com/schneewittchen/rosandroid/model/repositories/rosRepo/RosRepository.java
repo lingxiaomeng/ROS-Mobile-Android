@@ -33,6 +33,7 @@ import org.ros.internal.node.client.MasterClient;
 import org.ros.internal.node.response.Response;
 import org.ros.master.client.TopicType;
 import org.ros.namespace.GraphName;
+import org.ros.node.Node;
 import org.ros.node.NodeConfiguration;
 import org.ros.rosjava_geometry.FrameTransformTree;
 
@@ -43,6 +44,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import geometry_msgs.TransformStamped;
+import nav_msgs.Path;
 import tf2_msgs.TFMessage;
 
 
@@ -89,15 +91,17 @@ public class RosRepository implements SubNode.NodeListener {
         this.frameTransformTree = TransformProvider.getInstance().getTree();
 
         this.initStaticNodes();
+        this.addGPSWayPoint();
     }
 
 
     /**
      * Return the singleton instance of the repository.
+     *
      * @return Instance of this Repository
      */
-    public static RosRepository getInstance(final Context context){
-        if(instance == null){
+    public static RosRepository getInstance(final Context context) {
+        if (instance == null) {
             instance = new RosRepository(context);
         }
 
@@ -113,13 +117,18 @@ public class RosRepository implements SubNode.NodeListener {
         SubNode tfNode = new SubNode(this);
         tfNode.setTopic(tfTopic);
         currentNodes.put(tfTopic, tfNode);
-
         Topic tfStaticTopic = new Topic("/tf_static", TFMessage._TYPE);
         SubNode tfStaticNode = new SubNode(this);
         tfStaticNode.setTopic(tfStaticTopic);
         currentNodes.put(tfStaticTopic, tfStaticNode);
     }
 
+    private void addGPSWayPoint() {
+        PubNode node = new PubNode();
+        Topic gpsWaypointsTopic = new Topic("/gps_waypoints", Path._TYPE);
+        node.setTopic(gpsWaypointsTopic);
+        currentNodes.put(gpsWaypointsTopic, node);
+    }
 
     @Override
     public void onNewMessage(RosData message) {
@@ -127,7 +136,7 @@ public class RosRepository implements SubNode.NodeListener {
         if (message.getMessage() instanceof TFMessage) {
             TFMessage tf = (TFMessage) message.getMessage();
 
-            for (TransformStamped transform: tf.getTransforms()) {
+            for (TransformStamped transform : tf.getTransforms()) {
                 frameTransformTree.update(transform);
             }
         }
@@ -137,13 +146,16 @@ public class RosRepository implements SubNode.NodeListener {
 
     /**
      * Find the associated node and inform it about the changed data.
+     *
      * @param data Widget data that has changed
      */
     public void publishData(BaseData data) {
         AbstractNode node = currentNodes.get(data.getTopic());
 
-        if(node instanceof PubNode) {
-            ((PubNode)node).setData(data);
+        if (node instanceof PubNode) {
+            ((PubNode) node).setData(data);
+            Log.i("MLX",TAG+","+data.getTopic().type);
+
         }
     }
 
@@ -192,12 +204,13 @@ public class RosRepository implements SubNode.NodeListener {
 
     /**
      * Change the connection details to the ROS master like the IP or port.
+     *
      * @param master Master data
      */
     public void updateMaster(MasterEntity master) {
         Log.i(TAG, "Update Master");
 
-        if(master == null) {
+        if (master == null) {
             Log.i(TAG, "Master is null");
             return;
         }
@@ -215,10 +228,10 @@ public class RosRepository implements SubNode.NodeListener {
     }
 
 
-
     /**
      * React on a widget change. If at least one widget is added, deleted or changed this method
      * should be called.
+     *
      * @param newWidgets Current list of widgets
      */
     public void updateWidgets(List<BaseEntity> newWidgets) {
@@ -226,15 +239,15 @@ public class RosRepository implements SubNode.NodeListener {
 
         // Unpack widgets as a widget can contain child widgets
         List<BaseEntity> newEntities = new ArrayList<>();
-        for(BaseEntity baseEntity: newWidgets) {
+        for (BaseEntity baseEntity : newWidgets) {
             if (baseEntity instanceof GroupEntity) {
                 newEntities.addAll(baseEntity.childEntities);
-            } else{
+            } else {
                 newEntities.add(baseEntity);
             }
         }
 
-        for(BaseEntity baseEntity: newEntities) {
+        for (BaseEntity baseEntity : newEntities) {
             Log.i(TAG, "Entity: " + baseEntity.name);
         }
 
@@ -243,12 +256,12 @@ public class RosRepository implements SubNode.NodeListener {
         HashMap<Long, Boolean> widgetCheckMap = new HashMap<>();
         HashMap<Long, BaseEntity> widgetEntryMap = new HashMap<>();
 
-        for (BaseEntity oldWidget: currentWidgets) {
+        for (BaseEntity oldWidget : currentWidgets) {
             widgetCheckMap.put(oldWidget.id, false);
             widgetEntryMap.put(oldWidget.id, oldWidget);
         }
 
-        for (BaseEntity newWidget: newEntities) {
+        for (BaseEntity newWidget : newEntities) {
             if (widgetCheckMap.containsKey(newWidget.id)) {
                 // Node included in old and new list
 
@@ -258,14 +271,14 @@ public class RosRepository implements SubNode.NodeListener {
                 BaseEntity oldWidget = widgetEntryMap.get(newWidget.id);
                 updateNode(oldWidget, newWidget);
 
-            } else{
+            } else {
                 // Node not included in old list
                 addNode(newWidget);
             }
         }
 
         // Delete unused widgets
-        for (Long id: widgetCheckMap.keySet()) {
+        for (Long id : widgetCheckMap.keySet()) {
             if (!widgetCheckMap.get(id)) {
                 // Node not included in new list
                 removeNode(widgetEntryMap.get(id));
@@ -278,6 +291,7 @@ public class RosRepository implements SubNode.NodeListener {
 
     /**
      * Get the current connection status of the ROS service as a live data.
+     *
      * @return Connection status
      */
     public LiveData<ConnectionType> getRosConnectionStatus() {
@@ -305,6 +319,7 @@ public class RosRepository implements SubNode.NodeListener {
     /**
      * Create a node for a specific widget entity.
      * The node will be created and subsequently registered.
+     *
      * @param widget Widget to be added
      */
     private AbstractNode addNode(BaseEntity widget) {
@@ -319,7 +334,7 @@ public class RosRepository implements SubNode.NodeListener {
         } else if (widget instanceof ISubscriberEntity) {
             node = new SubNode(this);
 
-        }else {
+        } else {
             Log.i(TAG, "Widget is either publisher nor subscriber.");
             return null;
         }
@@ -335,14 +350,15 @@ public class RosRepository implements SubNode.NodeListener {
 
     /**
      * Update a widget and its associated Node by ID in the ROS graph.
+     *
      * @param oldWidget Old version of the widget
-     * @param widget Widget to update
+     * @param widget    Widget to update
      */
     private void updateNode(BaseEntity oldWidget, BaseEntity widget) {
         if (widget instanceof ISilentEntity) return;
         Log.i(TAG, "Update Node: " + oldWidget.name);
 
-        if (oldWidget.equalRosState(widget)){
+        if (oldWidget.equalRosState(widget)) {
             AbstractNode node = this.currentNodes.get(widget.topic);
             if (node == null) {
                 addNode(widget);
@@ -351,7 +367,7 @@ public class RosRepository implements SubNode.NodeListener {
 
             node.setWidget(widget);
 
-        } else{
+        } else {
             this.removeNode(oldWidget);
             this.addNode(widget);
         }
@@ -359,6 +375,7 @@ public class RosRepository implements SubNode.NodeListener {
 
     /**
      * Remove a widget and its associated Node in the ROS graph.
+     *
      * @param widget Widget to remove
      */
     private void removeNode(BaseEntity widget) {
@@ -371,6 +388,7 @@ public class RosRepository implements SubNode.NodeListener {
 
     /**
      * Connect the node to ROS node graph if a connection to the ROS master is running.
+     *
      * @param node Node to connect
      */
     private void registerNode(AbstractNode node) {
@@ -386,6 +404,7 @@ public class RosRepository implements SubNode.NodeListener {
 
     /**
      * Disconnect the node from ROS node graph if a connection to the ROS master is running.
+     *
      * @param node Node to disconnect
      */
     private void unregisterNode(AbstractNode node) {
@@ -404,6 +423,7 @@ public class RosRepository implements SubNode.NodeListener {
     /**
      * Result of a change in the internal data of a node header. Therefore it has to be
      * unregistered from the service and reregistered due to the implementation of ROS.
+     *
      * @param node Node main to be reregistered
      */
     private void reregisterNode(AbstractNode node) {
@@ -414,13 +434,13 @@ public class RosRepository implements SubNode.NodeListener {
     }
 
     private void registerAllNodes() {
-        for (AbstractNode node: currentNodes.values()) {
+        for (AbstractNode node : currentNodes.values()) {
             this.registerNode(node);
         }
     }
 
     private void unregisterAllNodes() {
-        for (AbstractNode node: currentNodes.values()) {
+        for (AbstractNode node : currentNodes.values()) {
             this.unregisterNode(node);
         }
     }
@@ -440,6 +460,7 @@ public class RosRepository implements SubNode.NodeListener {
 
     /**
      * Get a list from the ROS Master with all available topics.
+     *
      * @return Topic list
      */
     public List<Topic> getTopicList() {
@@ -452,7 +473,7 @@ public class RosRepository implements SubNode.NodeListener {
         GraphName graphName = GraphName.newAnonymous();
         Response<List<TopicType>> responseList = masterClient.getTopicTypes(graphName);
 
-        for (TopicType result: responseList.getResult()) {
+        for (TopicType result : responseList.getResult()) {
             String name = result.getName();
             String type = result.getMessageType();
 
@@ -462,7 +483,6 @@ public class RosRepository implements SubNode.NodeListener {
 
         return topicList;
     }
-
 
 
     private final class RosServiceConnection implements ServiceConnection {

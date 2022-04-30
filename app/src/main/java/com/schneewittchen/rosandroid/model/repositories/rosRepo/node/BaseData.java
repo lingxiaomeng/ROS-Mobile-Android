@@ -4,6 +4,7 @@ import com.schneewittchen.rosandroid.model.repositories.rosRepo.message.Topic;
 import com.schneewittchen.rosandroid.model.entities.widgets.BaseEntity;
 
 import org.ros.internal.message.Message;
+import org.ros.node.ConnectedNode;
 import org.ros.node.topic.Publisher;
 
 
@@ -23,4 +24,6 @@ public abstract class BaseData {
     public Message toRosMessage(Publisher<Message> publisher, BaseEntity widget){
         return null;
     }
+
+
 }

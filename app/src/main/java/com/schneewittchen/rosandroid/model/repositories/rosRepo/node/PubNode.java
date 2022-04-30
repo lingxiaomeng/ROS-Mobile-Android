@@ -1,7 +1,10 @@
 package com.schneewittchen.rosandroid.model.repositories.rosRepo.node;
 
+import android.util.Log;
+
 import com.schneewittchen.rosandroid.model.entities.widgets.BaseEntity;
 import com.schneewittchen.rosandroid.model.entities.widgets.PublisherLayerEntity;
+import com.schneewittchen.rosandroid.ui.fragments.custom.GPSWayPointsData;
 
 import org.ros.internal.message.Message;
 import org.ros.node.ConnectedNode;
@@ -26,13 +29,18 @@ public class PubNode extends AbstractNode {
     private Timer pubTimer;
     private long pubPeriod = 100L;
     private boolean immediatePublish = true;
+    private ConnectedNode node;
 
 
     @Override
     public void onStart(ConnectedNode parentNode) {
         publisher = parentNode.newPublisher(topic.name, topic.type);
-
+        node = parentNode;
         this.createAndStartSchedule();
+    }
+
+    public ConnectedNode getNode() {
+        return node;
     }
 
     /**
@@ -45,6 +53,7 @@ public class PubNode extends AbstractNode {
 
         if (immediatePublish) {
             publish();
+            Log.i("MLX", TAG + "," + data.getTopic().type);
         }
     }
 
@@ -61,9 +70,9 @@ public class PubNode extends AbstractNode {
     /**
      * Enable or disable immediate publishing.
      * In the enabled state the node will create und send a ros message as soon as
-     * @link #setData(Object) is called.
      *
      * @param flag Enable immediate publishing
+     * @link #setData(Object) is called.
      */
     public void setImmediatePublish(boolean flag) {
         this.immediatePublish = flag;
@@ -94,9 +103,15 @@ public class PubNode extends AbstractNode {
         if (lastData == null) {
             return;
         }
+        if (lastData instanceof GPSWayPointsData) {
+            Message message = ((GPSWayPointsData) lastData).toRosMessage(publisher, widget, node);
+            publisher.publish(message);
 
-        Message message = lastData.toRosMessage(publisher, widget);
-        publisher.publish(message);
+        } else {
+            Message message = lastData.toRosMessage(publisher, widget);
+            publisher.publish(message);
+
+        }
     }
 
     @Override

@@ -3,7 +3,7 @@ package com.schneewittchen.rosandroid.widgets.location;
 import com.schneewittchen.rosandroid.model.entities.widgets.PublisherWidgetEntity;
 import com.schneewittchen.rosandroid.model.repositories.rosRepo.message.Topic;
 
-import std_msgs.Bool;
+import sensor_msgs.NavSatFix;
 
 
 /**
@@ -25,7 +25,7 @@ public class LocationEntity extends PublisherWidgetEntity {
     public LocationEntity() {
         this.width = 2;
         this.height = 1;
-        this.topic = new Topic("location", Bool._TYPE);
+        this.topic = new Topic("location", NavSatFix._TYPE);
         this.immediatePublish = true;
         this.text = "A button";
         this.rotation = 0;

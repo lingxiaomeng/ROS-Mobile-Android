@@ -29,10 +29,13 @@ import com.amap.api.navi.model.AMapNaviPath;
 import com.amap.api.navi.model.NaviLatLng;
 import com.schneewittchen.rosandroid.R;
 import com.schneewittchen.rosandroid.databinding.FragmentCustomBinding;
+import com.schneewittchen.rosandroid.model.repositories.rosRepo.message.Topic;
 import com.schneewittchen.rosandroid.viewmodel.CustomViewModel;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import nav_msgs.Path;
 
 
 /**
@@ -61,6 +64,7 @@ public class customFragment extends naviFragment implements AMap.OnMapClickListe
     private Polyline polyline;
     private int evenType = -1;
     private Toast toast;
+
 
     public static customFragment newInstance() {
         Log.i(TAG, "New Master Fragment");
@@ -115,6 +119,7 @@ public class customFragment extends naviFragment implements AMap.OnMapClickListe
 
         binding.buttonSelectEnd.setOnClickListener(this);
         binding.buttonStart.setOnClickListener(this);
+
     }
 
     @Override
@@ -134,17 +139,15 @@ public class customFragment extends naviFragment implements AMap.OnMapClickListe
 
         ArrayList<MarkerOptions> markerOptionsArrayList = new ArrayList<>();
         for (AMapNaviPath path : navipaths.values()) {
-            Log.i("MLX", path.getCoordList().size() + "");
-            Log.i("MLX", path.getCoordList().toString());
             for (NaviLatLng p : path.getCoordList()) {
                 LatLng latLng = new LatLng(p.getLatitude(), p.getLongitude());
                 latLngs.add(latLng);
                 markerOptionsArrayList.add(new MarkerOptions().position(latLng));
             }
         }
+        mViewModel.publishGPSWayPointsData(new GPSWayPointsData(latLngs));
         polyline = aMap.addPolyline(new PolylineOptions().
                 addAll(latLngs).width(10).color(Color.argb(255, 0, 0, 255)));
-
     }
 
     @Override
@@ -212,8 +215,8 @@ public class customFragment extends naviFragment implements AMap.OnMapClickListe
                     mAMapNavi.calculateRideRoute(new NaviLatLng(endMarker.getPosition().latitude, endMarker.getPosition().longitude), new NaviLatLng(22.6005, 113.995263));
                 }
                 break;
-
         }
-
     }
+
+
 }

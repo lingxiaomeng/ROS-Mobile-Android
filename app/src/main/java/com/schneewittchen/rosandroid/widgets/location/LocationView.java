@@ -17,6 +17,7 @@ import androidx.annotation.Nullable;
 import com.amap.api.location.AMapLocationListener;
 import com.schneewittchen.rosandroid.R;
 import com.schneewittchen.rosandroid.ui.views.widgets.PublisherWidgetView;
+import com.schneewittchen.rosandroid.widgets.joystick.JoystickData;
 
 
 /**
@@ -87,11 +88,12 @@ public class LocationView extends PublisherWidgetView {
             //解析定位结果，
             String result = sb.toString();
             Log.i("MLX", "定位成功"+this);
+            this.publishViewData(new LocationData(location.getLatitude(), location.getLongitude()));
 //                tvResult.setText(result);
         } else {
             this.data = "定位失败";
             Log.i("MLX", "定位失败");
-//                tvResult.setText("定位失败，loc is null");
+            this.publishViewData(new LocationData(0, 0));
         }
     };
 
