@@ -17,6 +17,7 @@ import androidx.annotation.Nullable;
 import com.amap.api.location.AMapLocationListener;
 import com.schneewittchen.rosandroid.R;
 import com.schneewittchen.rosandroid.ui.views.widgets.PublisherWidgetView;
+import com.schneewittchen.rosandroid.utility.Utils;
 import com.schneewittchen.rosandroid.widgets.joystick.JoystickData;
 
 
@@ -43,51 +44,67 @@ public class LocationView extends PublisherWidgetView {
 
     AMapLocationListener locationListener = location -> {
         if (null != location) {
-            StringBuffer sb = new StringBuffer();
+//            StringBuffer sb = new StringBuffer();
+            StringBuilder stringBuilder = new StringBuilder();
+
             //errCode等于0代表定位成功，其他的为定位失败，具体的可以参照官网定位错误码说明
             if (location.getErrorCode() == 0) {
-                sb.append("定位成功" + "\n");
-                sb.append("定位类型: " + location.getLocationType() + "\n");
-                sb.append("经    度    : " + location.getLongitude() + "\n");
-                sb.append("纬    度    : " + location.getLatitude() + "\n");
-                sb.append("精    度    : " + location.getAccuracy() + "米" + "\n");
-                sb.append("提供者    : " + location.getProvider() + "\n");
+//                sb.append("定位成功" + "\n");
+//                sb.append("定位类型: " + location.getLocationType() + "\n");
+//                sb.append("经    度    : " + location.getLongitude() + "\n");
+//                sb.append("纬    度    : " + location.getLatitude() + "\n");
+//                sb.append("精    度    : " + location.getAccuracy() + "米" + "\n");
+//                sb.append("提供者    : " + location.getProvider() + "\n");
+//
+//                sb.append("速    度    : " + location.getSpeed() + "米/秒" + "\n");
+//                sb.append("角    度    : " + location.getBearing() + "\n");
+//                // 获取当前提供定位服务的卫星个数
+//                sb.append("星    数    : " + location.getSatellites() + "\n");
+//                sb.append("国    家    : " + location.getCountry() + "\n");
+//                sb.append("省            : " + location.getProvince() + "\n");
+//                sb.append("市            : " + location.getCity() + "\n");
+//                sb.append("城市编码 : " + location.getCityCode() + "\n");
+//                sb.append("区            : " + location.getDistrict() + "\n");
+//                sb.append("区域 码   : " + location.getAdCode() + "\n");
+//                sb.append("地    址    : " + location.getAddress() + "\n");
+//                sb.append("兴趣点    : " + location.getPoiName() + "\n");
+//                //定位完成的时间
+//                sb.append("定位时间: " + (location.getTime()) + "\n");
+                stringBuilder.append("经度:").append(location.getLongitude()).append(" ");
+                stringBuilder.append("纬度:").append(location.getLatitude()).append("\n");
+                stringBuilder.append("角度:").append(location.getBearing()).append(" ");
+                stringBuilder.append("速度: " + location.getSpeed() + "米/秒\n");
+                stringBuilder.append("精度: " + location.getAccuracy() + "米 ");
 
-                sb.append("速    度    : " + location.getSpeed() + "米/秒" + "\n");
-                sb.append("角    度    : " + location.getBearing() + "\n");
-                // 获取当前提供定位服务的卫星个数
-                sb.append("星    数    : " + location.getSatellites() + "\n");
-                sb.append("国    家    : " + location.getCountry() + "\n");
-                sb.append("省            : " + location.getProvince() + "\n");
-                sb.append("市            : " + location.getCity() + "\n");
-                sb.append("城市编码 : " + location.getCityCode() + "\n");
-                sb.append("区            : " + location.getDistrict() + "\n");
-                sb.append("区域 码   : " + location.getAdCode() + "\n");
-                sb.append("地    址    : " + location.getAddress() + "\n");
-                sb.append("兴趣点    : " + location.getPoiName() + "\n");
-                //定位完成的时间
-                sb.append("定位时间: " + (location.getTime()) + "\n");
+                stringBuilder.append("星数: " + location.getSatellites() + "\n");
+                stringBuilder.append("定位时间: " + Utils.formatUTC(location.getTime(), "yyyy-MM-dd HH:mm:ss") + "");
+
             } else {
+                stringBuilder.append("定位失败: ");
+                stringBuilder.append(location.getErrorInfo());
+
                 //定位失败
-                sb.append("定位失败" + "\n");
-                sb.append("错误码:" + location.getErrorCode() + "\n");
-                sb.append("错误信息:" + location.getErrorInfo() + "\n");
-                sb.append("错误描述:" + location.getLocationDetail() + "\n");
+//                sb.append("定位失败" + "\n");
+//                sb.append("错误码:" + location.getErrorCode() + "\n");
+//                sb.append("错误信息:" + location.getErrorInfo() + "\n");
+//                sb.append("错误描述:" + location.getLocationDetail() + "\n");
             }
-            sb.append("***定位质量报告***").append("\n");
-            sb.append("* WIFI开关：").append(location.getLocationQualityReport().isWifiAble() ? "开启" : "关闭").append("\n");
-            sb.append("* GPS状态：").append((location.getLocationQualityReport().getGPSStatus())).append("\n");
-            sb.append("* GPS星数：").append(location.getLocationQualityReport().getGPSSatellites()).append("\n");
-            sb.append("* 网络类型：" + location.getLocationQualityReport().getNetworkType()).append("\n");
-            sb.append("* 网络耗时：" + location.getLocationQualityReport().getNetUseTime()).append("\n");
-            sb.append("****************").append("\n");
-            //定位之后的回调时间
-            sb.append("回调时间: " + System.currentTimeMillis() + "\n");
-            this.data = "经度:" + location.getLongitude()+"\n"+"纬度:" + location.getLatitude();
+//            sb.append("***定位质量报告***").append("\n");
+//            sb.append("* WIFI开关：").append(location.getLocationQualityReport().isWifiAble() ? "开启" : "关闭").append("\n");
+//            sb.append("* GPS状态：").append((location.getLocationQualityReport().getGPSStatus())).append("\n");
+//            sb.append("* GPS星数：").append(location.getLocationQualityReport().getGPSSatellites()).append("\n");
+//            sb.append("* 网络类型：" + location.getLocationQualityReport().getNetworkType()).append("\n");
+//            sb.append("* 网络耗时：" + location.getLocationQualityReport().getNetUseTime()).append("\n");
+//            sb.append("****************").append("\n");
+//            //定位之后的回调时间
+//            sb.append("回调时间: " + System.currentTimeMillis() + "\n");
+
+
+
+            this.data = stringBuilder.toString();
+            Log.i("MLX", this.data+this);
+
             this.invalidate();
-            //解析定位结果，
-            String result = sb.toString();
-            Log.i("MLX", "定位成功"+this);
             this.publishViewData(new LocationData(location.getLatitude(), location.getLongitude()));
 //                tvResult.setText(result);
         } else {
@@ -118,7 +135,7 @@ public class LocationView extends PublisherWidgetView {
         textPaint = new TextPaint();
         textPaint.setColor(Color.BLACK);
         textPaint.setStyle(Paint.Style.FILL_AND_STROKE);
-        textPaint.setTextSize(26 * getResources().getDisplayMetrics().density);
+        textPaint.setTextSize(13 * getResources().getDisplayMetrics().density);
         LocationModel.setListener(locationListener);
         LocationModel.startLocation();
 

@@ -6,6 +6,7 @@ import android.graphics.Rect;
 import android.net.wifi.SupplicantState;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
@@ -29,9 +30,11 @@ import java.net.Socket;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 
 /**
@@ -362,5 +365,21 @@ public class Utils {
         }
 
         return false;
+    }
+
+    private static SimpleDateFormat sdf = null;
+    public  static String formatUTC(long l, String strPattern) {
+        if (TextUtils.isEmpty(strPattern)) {
+            strPattern = "yyyy-MM-dd HH:mm:ss";
+        }
+        if (sdf == null) {
+            try {
+                sdf = new SimpleDateFormat(strPattern, Locale.CHINA);
+            } catch (Throwable e) {
+            }
+        } else {
+            sdf.applyPattern(strPattern);
+        }
+        return sdf == null ? "NULL" : sdf.format(l);
     }
 }
