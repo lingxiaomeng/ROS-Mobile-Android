@@ -210,9 +210,9 @@ public class customFragment extends naviFragment implements AMap.OnMapClickListe
                 pick(1);
                 break;
             case R.id.button_start:
-                Toast.makeText(getContext(), "开始导航", Toast.LENGTH_SHORT).show();
                 if (endMarker != null) {
-                    mAMapNavi.calculateRideRoute(new NaviLatLng(endMarker.getPosition().latitude, endMarker.getPosition().longitude), new NaviLatLng(22.6005, 113.995263));
+                    Toast.makeText(getContext(), "开始导航", Toast.LENGTH_SHORT).show();
+                    mAMapNavi.calculateRideRoute(new NaviLatLng(endMarker.getPosition().latitude, endMarker.getPosition().longitude), new NaviLatLng(aMap.getMyLocation().getLatitude(),aMap.getMyLocation().getLongitude()));
                 }
                 break;
         }

@@ -53,7 +53,7 @@ public class PubNode extends AbstractNode {
 
         if (immediatePublish) {
             publish();
-            Log.i("MLX", TAG + "," + data.getTopic().type);
+//            Log.i("MLX", TAG + "," + data.getTopic().type);
         }
     }
 
@@ -110,7 +110,6 @@ public class PubNode extends AbstractNode {
         } else {
             Message message = lastData.toRosMessage(publisher, widget);
             publisher.publish(message);
-
         }
     }
 

@@ -82,7 +82,7 @@ public class RosDomain {
 
     public void publishData(BaseData data) {
         rosRepo.publishData(data);
-        Log.i("MLX",TAG+","+data.getTopic().type);
+//        Log.i("MLX",TAG+","+data.getTopic().type);
     }
 
     public void createWidget(Long parentId, String widgetType) {

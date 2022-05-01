@@ -154,8 +154,7 @@ public class RosRepository implements SubNode.NodeListener {
 
         if (node instanceof PubNode) {
             ((PubNode) node).setData(data);
-            Log.i("MLX",TAG+","+data.getTopic().type);
-
+//            Log.i("MLX",TAG+","+data.getTopic().type);
         }
     }
 

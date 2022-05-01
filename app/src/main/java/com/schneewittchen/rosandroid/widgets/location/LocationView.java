@@ -83,7 +83,7 @@ public class LocationView extends PublisherWidgetView {
             sb.append("****************").append("\n");
             //定位之后的回调时间
             sb.append("回调时间: " + System.currentTimeMillis() + "\n");
-            this.data = "经度:" + location.getLongitude()+","+"纬度:" + location.getLatitude();
+            this.data = "经度:" + location.getLongitude()+"\n"+"纬度:" + location.getLatitude();
             this.invalidate();
             //解析定位结果，
             String result = sb.toString();
