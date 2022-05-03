@@ -39,8 +39,6 @@ public class CustomViewModel extends AndroidViewModel {
         super(application);
         gpsWaypointsTopic = new Topic("/gps_waypoints", Path._TYPE);
         rosDomain = RosDomain.getInstance(application);
-
-
     }
 
     public void updateWidget(BaseEntity widget) {

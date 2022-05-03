@@ -129,8 +129,28 @@ public class customFragment extends naviFragment implements AMap.OnMapClickListe
     }
 
     @Override
+    public void onCalculateRouteFailure(AMapCalcRouteResult aMapCalcRouteResult) {
+        super.onCalculateRouteFailure(aMapCalcRouteResult);
+        if (toast != null) {
+            toast.cancel();
+            toast = null;
+        }
+        toast = Toast.makeText(getContext(), "规划失败:"+aMapCalcRouteResult.getErrorDescription(), Toast.LENGTH_SHORT);
+        toast.show();
+        if (polyline != null)
+            polyline.remove();
+    }
+
+    @Override
     public void onCalculateRouteSuccess(AMapCalcRouteResult aMapCalcRouteResult) {
         super.onCalculateRouteSuccess(aMapCalcRouteResult);
+        if (toast != null) {
+            toast.cancel();
+            toast = null;
+        }
+        toast = Toast.makeText(getContext(), "规划成功", Toast.LENGTH_SHORT);
+        toast.show();
+
         if (polyline != null)
             polyline.remove();
 
@@ -205,18 +225,28 @@ public class customFragment extends naviFragment implements AMap.OnMapClickListe
 
     @Override
     public void onClick(View view) {
+        if (toast != null) {
+            toast.cancel();
+            toast = null;
+        }
         switch (view.getId()) {
             case R.id.button_select_end:
                 pick(1);
                 break;
             case R.id.button_start:
                 if (endMarker != null) {
-                    Toast.makeText(getContext(), "开始导航", Toast.LENGTH_SHORT).show();
+                    toast = Toast.makeText(getContext(), "开始导航", Toast.LENGTH_SHORT);
+                    toast.show();
                     mAMapNavi.calculateRideRoute(new NaviLatLng(endMarker.getPosition().latitude, endMarker.getPosition().longitude), new NaviLatLng(aMap.getMyLocation().getLatitude(),aMap.getMyLocation().getLongitude()));
+                }else{
+                    toast = Toast.makeText(getContext(), "请选择终点", Toast.LENGTH_SHORT);
+                    toast.show();
                 }
                 break;
         }
     }
+
+
 
 
 }
