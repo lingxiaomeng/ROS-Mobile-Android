@@ -1,6 +1,7 @@
 package com.schneewittchen.rosandroid.widgets.gridmap;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.schneewittchen.rosandroid.ui.opengl.visualisation.ROSColor;
 import com.schneewittchen.rosandroid.ui.opengl.visualisation.TextureBitmap;
@@ -143,6 +144,6 @@ public class GridMapView extends SubscriberLayerView {
         }
 
         frame = GraphName.of(grid.getHeader().getFrameId());
+        Log.i("MLX","receive map");
     }
-
 }

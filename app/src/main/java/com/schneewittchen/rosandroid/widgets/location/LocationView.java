@@ -102,14 +102,14 @@ public class LocationView extends PublisherWidgetView {
 
 
             this.data = stringBuilder.toString();
-            Log.i("MLX", this.data+this);
+            Log.i("GPS", this.data+this);
 
             this.invalidate();
             this.publishViewData(new LocationData(location.getLatitude(), location.getLongitude()));
 //                tvResult.setText(result);
         } else {
             this.data = "定位失败";
-            Log.i("MLX", "定位失败");
+            Log.i("GPS", "定位失败");
             this.publishViewData(new LocationData(0, 0));
         }
     };

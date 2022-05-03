@@ -1,6 +1,7 @@
 package com.schneewittchen.rosandroid.model.repositories.rosRepo.node;
 
 import com.schneewittchen.rosandroid.model.repositories.rosRepo.message.RosData;
+import com.schneewittchen.rosandroid.ui.views.widgets.ISubscriberView;
 
 import org.ros.internal.message.Message;
 import org.ros.node.ConnectedNode;
@@ -36,10 +37,11 @@ public class SubNode extends AbstractNode {
             Subscriber<? extends Message> subscriber = parentNode.newSubscriber(topic.name, topic.type);
 
             subscriber.addMessageListener(data -> {
-                listener.onNewMessage(new RosData(topic, data));
+//                new Thread(() -> {
+                    listener.onNewMessage(new RosData(topic, data));
+//                }).start();
             });
-
-        } catch(Exception e) {
+        } catch (Exception e) {
             if (this.widget != null) {
                 this.widget.validMessage = false;
             }
@@ -48,7 +50,7 @@ public class SubNode extends AbstractNode {
 
     }
 
-    public interface NodeListener  {
+    public interface NodeListener {
         void onNewMessage(RosData message);
     }
 }

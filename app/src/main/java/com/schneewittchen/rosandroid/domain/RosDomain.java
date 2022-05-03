@@ -135,4 +135,8 @@ public class RosDomain {
 
     public List<Topic> getTopicList() { return rosRepo.getTopicList(); }
 
+    public void registerAllNodes() {
+        rosRepo.registerAllNodes();
+    }
+
 }

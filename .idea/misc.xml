@@ -16,6 +16,7 @@
         <entry key="..\:/workspace/ROS-Mobile-Android/app/src/main/res/layout/fragment_master.xml" value="0.2609375" />
         <entry key="..\:/workspace/ROS-Mobile-Android/app/src/main/res/layout/fragment_ssh.xml" value="0.18489583333333334" />
         <entry key="..\:/workspace/ROS-Mobile-Android/app/src/main/res/layout/fragment_viz.xml" value="0.1" />
+        <entry key="..\:/workspace/ROS-Mobile-Android/app/src/main/res/layout/widget_detail_imu.xml" value="0.18333333333333332" />
         <entry key="..\:/workspace/ROS-Mobile-Android/app/src/main/res/layout/widget_detail_laserscan.xml" value="0.33" />
         <entry key="..\:/workspace/ROS-Mobile-Android/app/src/main/res/layout/widget_detail_location.xml" value="0.18020833333333333" />
         <entry key="..\:/workspace/ROS-Mobile-Android/app/src/main/res/layout/widget_detail_marker.xml" value="0.23645833333333333" />

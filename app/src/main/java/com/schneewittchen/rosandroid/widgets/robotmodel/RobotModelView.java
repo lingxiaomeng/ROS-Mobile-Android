@@ -1,6 +1,7 @@
 package com.schneewittchen.rosandroid.widgets.robotmodel;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.schneewittchen.rosandroid.model.entities.widgets.BaseEntity;
 import com.schneewittchen.rosandroid.model.repositories.rosRepo.TransformProvider;
@@ -14,12 +15,14 @@ import com.schneewittchen.rosandroid.ui.views.widgets.SubscriberLayerView;
 import org.ros.internal.message.Message;
 import org.ros.namespace.GraphName;
 import org.ros.rosjava_geometry.FrameTransform;
+import org.ros.rosjava_geometry.FrameTransformTree;
 import org.ros.rosjava_geometry.Transform;
 
 import java.nio.FloatBuffer;
 
 import javax.microedition.khronos.opengles.GL10;
 
+import geometry_msgs.TransformStamped;
 import tf2_msgs.TFMessage;
 
 
@@ -34,12 +37,10 @@ public class RobotModelView extends SubscriberLayerView {
 
     public static final String TAG = RobotModelView.class.getSimpleName();
 
-    private Shape shape;
-    private TFMessage tf;
 
     public RobotModelView(Context context) {
         super(context);
-        shape = new GoalShape();
+//        shape = new GoalShape();
     }
 
 
@@ -54,9 +55,9 @@ public class RobotModelView extends SubscriberLayerView {
 //        double y = marker.getPose().getPosition().getY();
 //        double z = marker.getPose().getPosition().getZ();
 //        Log.i(TAG, x + " " + y + " " + z);
-        ROSColor pointcolor = new ROSColor(0.5f,0.5f,0.5f,1f);
+        ROSColor pointcolor = new ROSColor(0.5f, 0.5f, 0.5f, 1f);
 
-        FloatBuffer pointVertices = Vertices.allocateBuffer(3 );
+        FloatBuffer pointVertices = Vertices.allocateBuffer(3);
 
         pointVertices.put(0.0f);
         pointVertices.put(0.0f);
@@ -64,21 +65,13 @@ public class RobotModelView extends SubscriberLayerView {
 
         pointVertices.position(0);
 //        gl.glScalef((float)view.getCamera().getZoom()/100, (float)view.getCamera().getZoom()/100, 1.0f);
-        Vertices.drawPoints(gl, pointVertices, pointcolor, 25*view.getCamera().getScale());
+        Vertices.drawPoints(gl, pointVertices, pointcolor, 25 * view.getCamera().getScale());
 //        shape.draw(view, gl);
     }
 
     @Override
     public void onNewMessage(Message message) {
-        tf = (TFMessage) message;
-        GraphName source = GraphName.of("base_link");
-        frame = source;
-        FrameTransform frameTransform = TransformProvider.getInstance().getTree().transform(source, frame);
-
-        if (frameTransform == null) return;
-
-//        Transform poseTransform = Transform.fromPoseMessage(marker.getPose());
-//        shape.setTransform(frameTransform.getTransform().multiply(poseTransform));
+        GraphName base_link = GraphName.of("base_link");
+        frame = base_link;
     }
-
 }

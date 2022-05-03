@@ -224,7 +224,9 @@ public class WidgetViewGroup extends ViewGroup {
                 IBaseView baseView = (IBaseView) view;
 
                 if (baseView.getWidgetEntity().topic.equals(topic)){
+
                     ((ISubscriberView)view).onNewMessage(message);
+
                 }
             }
         }

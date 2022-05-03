@@ -24,8 +24,8 @@ import sensor_msgs.NavSatFix;
 public class LocationData extends BaseData {
 
     public static final String TAG = JoystickData.class.getSimpleName();
-    public double latitude;
-    public double longitude;
+    private final double latitude;
+    private final double longitude;
 
     public LocationData(double latitude, double longitude) {
         this.latitude = latitude;

@@ -13,6 +13,7 @@ import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
 import com.schneewittchen.rosandroid.domain.RosDomain;
 import com.schneewittchen.rosandroid.model.repositories.rosRepo.message.RosData;
+import com.schneewittchen.rosandroid.model.repositories.rosRepo.node.AbstractNode;
 import com.schneewittchen.rosandroid.model.repositories.rosRepo.node.BaseData;
 import com.schneewittchen.rosandroid.model.entities.widgets.BaseEntity;
 
@@ -57,5 +58,7 @@ public class VizViewModel extends AndroidViewModel {
     public void publishData(BaseData data) {
         rosDomain.publishData(data);
     }
-
+    public void registerAllNodes() {
+        rosDomain.registerAllNodes();
+    }
 }

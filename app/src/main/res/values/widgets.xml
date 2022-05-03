@@ -13,6 +13,8 @@
         <item>RqtPlot</item>
         <item>Viz2D</item>
         <item>Location</item>
+        <item>Imu</item>
+
     </string-array>
 
     <string-array name="layer_names">
@@ -73,6 +75,10 @@
     <!-- Battery -->
     <string name="Battery_description">
         The battery indicator displays charging activity and charge percentage.
+    </string>
+
+    <string name="Imu_description">
+        Return Imu data.
     </string>
     <!-- Battery -->
     <string name="Location_description">

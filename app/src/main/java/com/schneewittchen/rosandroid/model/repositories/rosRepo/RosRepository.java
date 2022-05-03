@@ -137,6 +137,8 @@ public class RosRepository implements SubNode.NodeListener {
             TFMessage tf = (TFMessage) message.getMessage();
 
             for (TransformStamped transform : tf.getTransforms()) {
+//                Log.i("MLX",transform.getChildFrameId());
+//                Log.i("MLX",transform.getHeader().getFrameId());
                 frameTransformTree.update(transform);
             }
         }
@@ -432,7 +434,7 @@ public class RosRepository implements SubNode.NodeListener {
         registerNode(node);
     }
 
-    private void registerAllNodes() {
+    public void registerAllNodes() {
         for (AbstractNode node : currentNodes.values()) {
             this.registerNode(node);
         }

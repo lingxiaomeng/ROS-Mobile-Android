@@ -1,5 +1,7 @@
 package com.schneewittchen.rosandroid.ui.fragments.viz;
 
+import android.content.Context;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +18,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.schneewittchen.rosandroid.R;
+import com.schneewittchen.rosandroid.widgets.imu.ImuModel;
 import com.schneewittchen.rosandroid.widgets.location.LocationModel;
 import com.schneewittchen.rosandroid.viewmodel.VizViewModel;
 import com.schneewittchen.rosandroid.ui.general.DataListener;
@@ -39,6 +42,7 @@ public class VizFragment extends Fragment implements DataListener, WidgetChangeL
 
     private VizViewModel mViewModel;
     private LocationModel locationModel;
+    private ImuModel imuModel;
 
     private WidgetViewGroup widgetViewGroupview;
     private DrawerLayout drawerLayout;
@@ -55,6 +59,7 @@ public class VizFragment extends Fragment implements DataListener, WidgetChangeL
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
+
         return inflater.inflate(R.layout.fragment_viz, container, false);
     }
 
@@ -72,6 +77,7 @@ public class VizFragment extends Fragment implements DataListener, WidgetChangeL
         drawerLayout.setScrimColor(getResources().getColor(R.color.drawerFadeColor));
 
         vizEditModeSwitch = view.findViewById(R.id.edit_viz_switch);
+//        if(mViewModel!=null)mViewModel.registerAllNodes();
     }
 
     @Override
@@ -80,6 +86,7 @@ public class VizFragment extends Fragment implements DataListener, WidgetChangeL
 
         mViewModel = new ViewModelProvider(this).get(VizViewModel.class);
         locationModel = LocationModel.getInstance(getContext());
+        imuModel = ImuModel.getInstance((SensorManager) (getContext().getSystemService(Context.SENSOR_SERVICE)));
 
         mViewModel.getCurrentWidgets().observe(getViewLifecycleOwner(), widgetEntities -> {
             widgetViewGroupview.setWidgets(widgetEntities);
